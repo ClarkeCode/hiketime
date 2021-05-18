@@ -1,0 +1,24 @@
+{
+  "name": "hiketime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js",
+    "start": "node app.js 7007"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ClarkeCode/hiketime.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ClarkeCode/hiketime/issues"
+  },
+  "homepage": "https://github.com/ClarkeCode/hiketime#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
