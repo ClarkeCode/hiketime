@@ -1,7 +1,7 @@
 {
   "name": "hiketime",
   "version": "1.0.0",
-  "description": "",
+  "description": "A basic React / Node.js application to track and record places where you've gone on a hike",
   "main": "app.js",
   "scripts": {
     "test": "node app.js",
@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/ClarkeCode/hiketime#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
   }
 }
