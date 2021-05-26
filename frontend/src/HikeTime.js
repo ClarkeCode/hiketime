@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-// import logo from './logo.svg';
-// import shouldPureComponentUpdate from 'react-pure-render/function';
 
 class HikeTime extends Component {
 	constructor(props) {
@@ -11,14 +9,15 @@ class HikeTime extends Component {
 		};
 	}
 
-	// const [data, setData] = React.useState(null);
-	componentDidMount() {
-		fetch("http://localhost:7007/getMarkers")
-			.then((res) => res.json())
-			.then((data) => {this.setState({hasMarkerData: true, markerData: data}); });
-	}
+	fetchData = async () => {
+		const response = await fetch("http://localhost:7007/getMarkers");
+		const resJSON = await response.json();
+		this.setState({hasMarkerData: true, markerData: resJSON});
+	};
 
-	// shouldComponentUpdate = shouldPureComponentUpdate;
+	componentDidMount() {
+		this.fetchData();
+	}
 
 	render() {
 		return (
