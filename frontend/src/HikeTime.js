@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Button, Spinner, Toaster, Position } from "@blueprintjs/core"
 import LocationModal from "./custom-components/LocationModal";
 
+const serverAddress = "http://localhost:7007";
 const toasterProps = { position: Position.BOTTOM }
-const locationCategories = ["Park", "Hill", "Woods"];
 
 class HikeTime extends Component {
 	constructor(props) {
@@ -19,9 +19,11 @@ class HikeTime extends Component {
 
 	componentDidMount() { this.fetchData(); }
 	fetchData = async () => {
-		const response = await fetch("http://localhost:7007/getMarkers");
-		const resJSON = await response.json();
-		this.setState({hasMarkerData: true, markerData: resJSON, locationCategories: locationCategories});
+		const markerResponse = await fetch(serverAddress+"/getMarkers");
+		const markerJSON = await markerResponse.json();
+		const categoryResponse = await fetch(serverAddress+"/getCategories")
+		const categoryJSON = await categoryResponse.json();
+		this.setState({hasMarkerData: true, markerData: markerJSON, locationCategories: categoryJSON});
 	};
 
 	addNewLocation = (location) => { this.setState(oldState => ({
