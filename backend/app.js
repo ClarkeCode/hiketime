@@ -7,8 +7,9 @@ const path = require("path");
 const fs = require("fs");
 
 const portNumber = process.argv[2];
-const serverSettingsFilePath = __dirname+"/server_settings.json";
-const defaultMarkersFilePath = __dirname+"/default_markers.json";
+const serverSettingsFilePath = __dirname+"/resources/server_settings.json";
+const defaultMarkersFilePath = __dirname+"/resources/default_markers.json";
+const defaultCategoriesFilePath = __dirname+"/resources/default_categories.json";
 
 
 const externalSettings = JSON.parse(fs.readFileSync(serverSettingsFilePath, {encoding: "utf8", flag: "r"}));
@@ -34,6 +35,11 @@ else {
 /* **************
 	ENDPOINTS
 *****************/
+
+app.get("/getCategories", (req, res) => {
+	console.log("Call to GET: /getCategories");
+	res.sendFile(path.join(defaultCategoriesFilePath));
+});
 
 app.get("/getMarkers", (req, res) => {
 	console.log("Call to GET: /getMarkers");
