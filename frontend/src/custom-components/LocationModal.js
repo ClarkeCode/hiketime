@@ -38,7 +38,7 @@ class LocationModal extends Component {
 		if (this.hasMinimumLocationInfo()) {
 			const data = this.getLocationInfo();
 			this.props.newLocationHandler(data);
-			this.props.handleImageUpload(this.state.locationPictureFile);
+			this.props.imageUploadHandler(this.state.locationPictureFile);
 			this.props.toaster.show({intent: Intent.SUCCESS, timeout: 3000, icon: "tick", message: "Saved new location \""+data.name+"\"!"});
 			this.clearLocationInfo();
 			this.props.onClose();
