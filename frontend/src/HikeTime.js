@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import { Button, Spinner, Toaster, Position } from "@blueprintjs/core"
+import { Spinner, Toaster, Position, Collapse, Intent } from "@blueprintjs/core"
 import LocationModal from "./custom-components/LocationModal";
+import MarkerList from "./custom-components/MarkerList";
+import HikeTimeNavbar from "./custom-components/HikeTimeNavbar";
+import "./HikeTime.css";
 
 const serverAddress = "http://localhost:7007";
 const toasterProps = { position: Position.BOTTOM }
 
-class HikeTime extends Component {
+export default class HikeTime extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			hasMarkerData: false,
 			markerData: Array(1).fill(null),
-			showNewLocationModal: false
+			showNewLocationModal: false,
+			showMarkerList: true
 		};
 
 		this.addNewLocation = this.addNewLocation.bind(this);
@@ -37,6 +41,8 @@ class HikeTime extends Component {
 	handleNewLocationOpen = () => { this.setState({showNewLocationModal: true}); }
 	handleNewLocationClose = () => { this.setState({showNewLocationModal: false}); }
 
+	toggleMarkerListVisibility = () => { this.setState(oldState => ({showMarkerList: !oldState.showMarkerList})); }
+
 	toasterRefHandler = (ref) => {(this.toaster = ref)};
 
 	render() {
@@ -51,9 +57,15 @@ class HikeTime extends Component {
 		return (
 			<div className="HikeTime">
 				<Toaster {...toasterProps} ref={this.toasterRefHandler}/>
-				<div>HikeTime</div>
-				<div>{JSON.stringify(this.state.markerData, null, '\t')}</div>
-				<Button icon="add" onClick={this.handleNewLocationOpen}>Add New Location</Button>
+
+				<HikeTimeNavbar fixedToTop={true} onButtonClick={this.toggleMarkerListVisibility}/>
+
+				<Collapse className="MarkerListWrapper" isOpen={this.state.showMarkerList}>
+					<MarkerList data={this.state.markerData} locale={this.props.locale} 
+						openNewLocationModal={this.handleNewLocationOpen}
+						footerProps={{fill: true, minimal: false, intent: Intent.PRIMARY}}/>
+				</Collapse>
+				
 				<LocationModal
 					isOpen={this.state.showNewLocationModal}
 					onClose={this.handleNewLocationClose}
@@ -66,5 +78,3 @@ class HikeTime extends Component {
 		);
 	}
 }
-
-export default HikeTime;
