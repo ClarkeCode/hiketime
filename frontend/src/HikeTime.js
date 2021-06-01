@@ -57,7 +57,7 @@ export default class HikeTime extends Component {
 				</div>
 			);
 		}
-		const generatedMarkers = this.state.markerData.map(location => {
+		const generatedMarkers = this.state.markerData.filter((location) => location.lat !== null && location.lon !== null).map(location => {
 			return (<LocationMarker key={location.name} lat={location.lat} lng={location.lon} text={location.name} />);
 		});
 		return (
