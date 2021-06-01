@@ -1,0 +1,5 @@
+{
+    "developmentMode": true,
+    "useWhitelist": true,
+    "whitelist": ["http://localhost:3000"]
+}
