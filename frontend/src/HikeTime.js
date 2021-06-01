@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Spinner, Toaster, Position, Collapse, Intent } from "@blueprintjs/core"
+import GoogleMap from "google-map-react";
 import LocationModal from "./custom-components/LocationModal";
 import MarkerList from "./custom-components/MarkerList";
 import HikeTimeNavbar from "./custom-components/HikeTimeNavbar";
+import LocationMarker from "./custom-components/LocationMarker";
 import "./HikeTime.css";
 
 const serverAddress = "http://localhost:7007";
@@ -27,7 +29,8 @@ export default class HikeTime extends Component {
 		const markerJSON = await markerResponse.json();
 		const categoryResponse = await fetch(serverAddress+"/getCategories")
 		const categoryJSON = await categoryResponse.json();
-		this.setState({hasMarkerData: true, markerData: markerJSON, locationCategories: categoryJSON});
+		const mapSettings = await (await fetch(serverAddress+"/getMapSettings")).json();
+		this.setState({hasMarkerData: true, markerData: markerJSON, locationCategories: categoryJSON, mapSettings: mapSettings});
 	};
 
 	addNewLocation = (location) => { this.setState(oldState => ({
@@ -54,6 +57,9 @@ export default class HikeTime extends Component {
 				</div>
 			);
 		}
+		const generatedMarkers = this.state.markerData.map(location => {
+			return (<LocationMarker key={location.name} lat={location.lat} lng={location.lon} text={location.name} />);
+		});
 		return (
 			<div className="HikeTime">
 				<Toaster {...toasterProps} ref={this.toasterRefHandler}/>
@@ -65,6 +71,15 @@ export default class HikeTime extends Component {
 						openNewLocationModal={this.handleNewLocationOpen}
 						footerProps={{fill: true, minimal: false, intent: Intent.PRIMARY}}/>
 				</Collapse>
+
+				<GoogleMap
+					bootstrapURLKeys={{key: this.state.mapSettings.googleMapsAPIKey}}
+					defaultZoom={15}
+					defaultCenter={this.state.mapSettings.defaultLatLongCentre}
+					yesIWantToUseGoogleMapApiInternals
+				>
+					{generatedMarkers}
+				</GoogleMap>
 				
 				<LocationModal
 					isOpen={this.state.showNewLocationModal}
