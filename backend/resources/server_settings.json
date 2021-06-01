@@ -1,5 +1,7 @@
 {
     "developmentMode": true,
     "useWhitelist": true,
-    "whitelist": ["http://localhost:3000"]
+    "whitelist": ["http://localhost:3000"],
+    "mapCentreLat": 42.95025973864676,
+    "mapCentreLong": -81.33500044022348
 }

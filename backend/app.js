@@ -7,12 +7,16 @@ const path = require("path");
 const fs = require("fs");
 
 const portNumber = process.argv[2];
-const serverSettingsFilePath = __dirname+"/resources/server_settings.json";
-const defaultMarkersFilePath = __dirname+"/resources/default_markers.json";
-const defaultCategoriesFilePath = __dirname+"/resources/default_categories.json";
+const resourcesDir = __dirname+"/resources/"
+
+const serverSettingsFilePath = resourcesDir+"server_settings.json";
+const apiKeysFilePath = resourcesDir+"api_keys.json";
+const defaultMarkersFilePath = resourcesDir+"default_markers.json";
+const defaultCategoriesFilePath = resourcesDir+"default_categories.json";
 
 
 const externalSettings = JSON.parse(fs.readFileSync(serverSettingsFilePath, {encoding: "utf8", flag: "r"}));
+const apiKeys = JSON.parse(fs.readFileSync(apiKeysFilePath, {encoding: "utf8", flag: "r"}));
 console.log(externalSettings);
 
 const corsOptions = {
@@ -35,6 +39,14 @@ else {
 /* **************
 	ENDPOINTS
 *****************/
+
+app.get("/getMapSettings", (req, res) => {
+	console.log("Call to GET: /getMapSettings");
+	res.json({
+		googleMapsAPIKey: apiKeys.googleMapsAPIKey,
+		defaultLatLongCentre: [externalSettings.mapCentreLat, externalSettings.mapCentreLong]
+	});
+});
 
 app.get("/getCategories", (req, res) => {
 	console.log("Call to GET: /getCategories");
