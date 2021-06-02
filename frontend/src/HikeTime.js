@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { Spinner, Toaster, Position, Collapse, Intent } from "@blueprintjs/core"
-import GoogleMap from "google-map-react";
+import { Spinner, Toaster, Position, Collapse, Intent } from "@blueprintjs/core";
 import LocationModal from "./custom-components/LocationModal";
 import MarkerList from "./custom-components/MarkerList";
 import HikeTimeNavbar from "./custom-components/HikeTimeNavbar";
-import LocationMarker from "./custom-components/LocationMarker";
+import HikeTimeMap from "./custom-components/HikeTimeMap";
 import "./HikeTime.css";
 
 const serverAddress = "http://localhost:7007";
@@ -57,9 +56,6 @@ export default class HikeTime extends Component {
 				</div>
 			);
 		}
-		const generatedMarkers = this.state.markerData.filter((location) => location.lat !== null && location.lon !== null).map(location => {
-			return (<LocationMarker key={location.name} lat={location.lat} lng={location.lon} text={location.name} />);
-		});
 		return (
 			<div className="HikeTime">
 				<Toaster {...toasterProps} ref={this.toasterRefHandler}/>
@@ -72,14 +68,12 @@ export default class HikeTime extends Component {
 						footerProps={{fill: true, minimal: false, intent: Intent.PRIMARY}}/>
 				</Collapse>
 
-				<GoogleMap
-					bootstrapURLKeys={{key: this.state.mapSettings.googleMapsAPIKey}}
-					defaultZoom={15}
+				<HikeTimeMap
+					markerData={this.state.markerData}
+					apiKey={this.state.mapSettings.googleMapsAPIKey}
 					defaultCenter={this.state.mapSettings.defaultLatLongCentre}
-					yesIWantToUseGoogleMapApiInternals
-				>
-					{generatedMarkers}
-				</GoogleMap>
+					openNewLocationModal={this.handleNewLocationOpen}
+					updateModalCoordinates={undefined}/>
 				
 				<LocationModal
 					isOpen={this.state.showNewLocationModal}
