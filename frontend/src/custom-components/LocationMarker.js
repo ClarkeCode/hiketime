@@ -39,7 +39,7 @@ export default class LocationMarker extends Component {
 			left: -sizeHoriz / 2,
 			top: -sizeVert / 2,
 
-			border: '5px solid '+(this.props.hover?'#3f51b5':'#f44336'),
+			border: '5px solid '+(this.props.$hover?'#3f51b5':'#f44336'),
 			borderRadius: sizeVert,
 			backgroundColor: 'white',
 			textAlign: 'center',
