@@ -15,8 +15,11 @@ export default class HikeTime extends Component {
 		this.state = {
 			hasMarkerData: false,
 			markerData: Array(1).fill(null),
+			showMarkerList: true,
+
 			showNewLocationModal: false,
-			showMarkerList: true
+			modalLat: null,
+			modalLong: null
 		};
 
 		this.addNewLocation = this.addNewLocation.bind(this);
@@ -40,8 +43,14 @@ export default class HikeTime extends Component {
 		//TODO: send the file to the server
 	}
 
+	handleModalLatitudeChange = (val) => this.setState({modalLat: val});
+	handleModalLongitudeChange = (val) => this.setState({modalLong: val});
+	getModalCoordinate = () => { return {lat: this.state.modalLat, lon: this.state.modalLong}};
+	handleModalNewCoordinate = (coords) => { this.handleModalLatitudeChange(coords.lat); this.handleModalLongitudeChange(coords.lng); };
+	handleModalClearCoordinate = () => this.setState({modalLat: null, modalLong: null});
+
 	handleNewLocationOpen = () => { this.setState({showNewLocationModal: true}); }
-	handleNewLocationClose = () => { this.setState({showNewLocationModal: false}); }
+	handleNewLocationClose = () => { this.setState({showNewLocationModal: false}); this.handleModalClearCoordinate(); }
 
 	toggleMarkerListVisibility = () => { this.setState(oldState => ({showMarkerList: !oldState.showMarkerList})); }
 
@@ -73,11 +82,16 @@ export default class HikeTime extends Component {
 					apiKey={this.state.mapSettings.googleMapsAPIKey}
 					defaultCenter={this.state.mapSettings.defaultLatLongCentre}
 					openNewLocationModal={this.handleNewLocationOpen}
-					updateModalCoordinates={undefined}/>
+					updateModalCoordinates={this.handleModalNewCoordinate}/>
 				
 				<LocationModal
-					isOpen={this.state.showNewLocationModal}
 					onClose={this.handleNewLocationClose}
+					handleLatitudeChange={this.handleModalLatitudeChange}
+					handleLongitudeChange={this.handleModalLongitudeChange}
+					handleClearCoordinates={this.handleModalClearCoordinate}
+					getCoordinate={this.getModalCoordinate}
+
+					isOpen={this.state.showNewLocationModal}
 					locale={this.props.locale}
 					locationCategories={this.state.locationCategories}
 					newLocationHandler={this.addNewLocation}

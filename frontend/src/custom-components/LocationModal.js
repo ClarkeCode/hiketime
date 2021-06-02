@@ -6,7 +6,10 @@ import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
 const latitudeProps = { placeholder: "Latitude", min: "-90", max: "90" };
 const longitudeProps = { placeholder: "Longitude", min: "-180", max: "180" };
-const latLongProps = { className: "latlongInput", buttonPosition: "none", clampValueOnBlur: true, stepSize: 0.0001, minorStepSize: 0.000001}
+const latLongProps = { className: "latlongInput", buttonPosition: "none", clampValueOnBlur: true
+// , stepSize: 0.0001, minorStepSize: 0.000001
+, stepSize: 0.1, minorStepSize: 0.001
+}
 
 
 class LocationModal extends Component {
@@ -25,15 +28,16 @@ class LocationModal extends Component {
 
 			locationName: null,
 			category: undefined,
-			latitude: null,
-			longitude: null,
 			locationPictureFile: null
 		};
 	}
 
-	getLocationInfo = () => { return {name: this.state.locationName, category: this.state.category, lat: this.state.latitude, lon: this.state.longitude, pictureFile: this.state.locationPictureFile}; }
+	getLocationInfo = () => { return {name: this.state.locationName, category: this.state.category, ...this.props.getCoordinate(), pictureFile: this.state.locationPictureFile}; }
 	hasMinimumLocationInfo = () => { return this.state.locationName !== null && typeof this.state.category !== "undefined"; }
-	clearLocationInfo = () => this.setState({locationName: null, category: undefined, latitude: null, longitude: null, locationPictureFile: null, necessaryInfoIntent: Intent.NONE});
+	clearLocationInfo = () => {
+		this.setState({locationName: null, category: undefined, locationPictureFile: null, necessaryInfoIntent: Intent.NONE});
+		this.props.handleClearCoordinates();
+	}
 	handleSaveInfo = () => {
 		if (this.hasMinimumLocationInfo()) {
 			const data = this.getLocationInfo();
@@ -50,8 +54,9 @@ class LocationModal extends Component {
 
 
 	handleNameChange = (e) => this.setState({locationName: (e.target.value === "") ? null : e.target.value });
-	handleLatitudeChange = (val) => this.setState({latitude: val});
-	handleLongitudeChange = (val) => this.setState({longitude: val});
+	handleLatitudeChange = (val) => this.props.handleLatitudeChange(val);
+	handleLongitudeChange = (val) => this.props.handleLongitudeChange(val);
+
 	handleFileSelection = (e) => this.setState({locationPictureFile: e.target.files[0], fileInputText: e.target.files[0].name, fileWasSelected: true});
 	
 	handleCategorySelectionChange = (val) => this.setState({category: val});
@@ -101,8 +106,8 @@ class LocationModal extends Component {
 							onInputChange={this.handleFileSelection}
 							inputProps={{accept: [".png",".jpg",".jpeg",".bmp"]}}/>
 						<ControlGroup className="latlongInputGroup">
-							<NumericInput onValueChange={this.handleLatitudeChange} locale={this.props.locale} {...latitudeProps}{...latLongProps}></NumericInput>
-							<NumericInput onValueChange={this.handleLongitudeChange} locale={this.props.locale} {...longitudeProps}{...latLongProps}></NumericInput>
+							<NumericInput value={this.props.getCoordinate().lat} onValueChange={this.handleLatitudeChange} locale={this.props.locale} {...latitudeProps}{...latLongProps}></NumericInput>
+							<NumericInput value={this.props.getCoordinate().lon} onValueChange={this.handleLongitudeChange} locale={this.props.locale} {...longitudeProps}{...latLongProps}></NumericInput>
 						</ControlGroup>
 					</FormGroup>
 				</div>
